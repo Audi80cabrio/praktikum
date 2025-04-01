@@ -1,0 +1,3 @@
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-10-17 11:20:12.824
+!MESSAGE Indexed 'FreeRTOS_nucleo' (22 sources, 82 headers) in 0.638 sec: 5,038 declarations; 26,556 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0063%)

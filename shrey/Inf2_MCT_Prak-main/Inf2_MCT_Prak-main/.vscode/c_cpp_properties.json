@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "name": "linux-gcc-x64",
+      "includePath": [
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+        "${workspaceFolder}/**"
+      ],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+=======
+>>>>>>> ee9798f483367ff2c14898703d6905639f09a690
+        "${workspaceFolder}/**",
+        "C:/Program Files/boost_1_84_0"
+      ],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "${default}",
+      "cppStandard": "c++20",
+<<<<<<< HEAD
+=======
+>>>>>>> Develop
+>>>>>>> ee9798f483367ff2c14898703d6905639f09a690
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerArgs": [
+        ""
+      ]
+    }
+  ],
+  "version": 4
+}
