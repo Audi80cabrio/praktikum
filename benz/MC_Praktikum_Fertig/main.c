@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "display.h" //Aus Moodle - selbst Programmieren --> 1BP 
-// LCD_Init(), LCD_ClearDisplay() zum Display löschen, LCD_WriteString() um Text auf Display
+// LCD_Init(), LCD_ClearDisplay() zum Display lï¿½schen, LCD_WriteString() um Text auf Display
 /*
 u_delay Funktion mit ca. 1Hz Frequenz
 */
@@ -26,7 +26,7 @@ void LEDs_initPorts(){
 	GPIOE->MODER |= 0x55554000; //Bits: 30, 28, 20, 18, 16, 14
 	GPIOE->MODER &= ~(0xAAAA8000); //Bits: " jeweils +1
 }
-void  LCD_Output16BitWord(uint16_t data) //Aus Moodle-Aufgabe (mit Poovi gemeinsam gelöst)
+void  LCD_Output16BitWord(uint16_t data) //Aus Moodle-Aufgabe (mit Poovi gemeinsam gelï¿½st)
 {
     GPIOE->ODR &= (0x007F);
     GPIOD->ODR &= (0x38FC);
@@ -52,7 +52,7 @@ void LEDs_Write (uint16_t data){
 /*
 Lauflicht-Funktion 
 */
-void lauflicht(void){ 			// Nach neuer Aufgabe den u_delay mit Timer ersetzen if-Abfrage für ms (100ms) 
+void lauflicht(void){ 			// Nach neuer Aufgabe den u_delay mit Timer ersetzen if-Abfrage fï¿½r ms (100ms) 
 	uint16_t LED_Word = 0x0001;
 	for(int j=0; j<16; j++){ 			//Aufbauend Einschalten
 		LEDs_Write(LED_Word);
@@ -104,10 +104,10 @@ volatile unsigned int mainloop = 1;
 volatile unsigned int dimmen = 0;
 
 void Timer7_init(){
-	NVIC_SetPriority(TIM7_IRQn, 10); //Timer 7 mit Interrupt-Priorität: 10
-	NVIC_EnableIRQ(TIM7_IRQn); //Interrupt für Timer7 einschalten 
+	NVIC_SetPriority(TIM7_IRQn, 10); //Timer 7 mit Interrupt-PrioritÃ¤t: 10
+	NVIC_EnableIRQ(TIM7_IRQn); //Interrupt fÃ¼r Timer7 einschalten 
 	
-	RCC->APB1ENR |= (1<<5); //Zeit für Timer7 einschalten
+	RCC->APB1ENR |= (1<<5); //Zeit fÃ¼r Timer7 einschalten
 		//Direkt im Timer 7
 		//TIM7->CR1 |= (1<<2); //Bit auf 1 setzen -> disable update
 		TIM7->DIER |= (1); //DMA einschalten
@@ -128,13 +128,13 @@ void TIM7_IRQHandler(void){ //Aus Vorlesung c:
 	}
 	if (curr_ms + 10000 <= ms){
 		//GPIOD->ODR &= ~(1<<13);
-		//Hier Funktion für Display dimmen - while Schleife in Interrupt! AAARGH
+		//Hier Funktion fï¿½r Display dimmen - while Schleife in Interrupt! AAARGH
 		dimmen = 1;
 	}
 		
 	//BLINKY
 	if (ms % 500 == 0) {  //alle 500ms rein gehen
-		if (GPIOA->IDR & 1){ //User Taste gedrückt
+		if (GPIOA->IDR & 1){ //User Taste gedrï¿½ckt
 			GPIOD->ODR ^= (1<<12); //XOR Bitweise mit 1 (falls 0 -> 1, 1->0)
 		} else { //Sonst LED aus
 			GPIOD->ODR &= ~(1<<12);
@@ -151,7 +151,7 @@ void TIM7_IRQHandler(void){ //Aus Vorlesung c:
 
 /*
 //POOVIs Frequenzmessung
-//Anzahl Zählerüberläufe 
+//Anzahl Zï¿½hlerï¿½berlï¿½ufe 
 volatile uint16_t freq_overflow_count = 0;
 
 //letzter Capture Zeitstempel
@@ -165,11 +165,11 @@ void TIM8_BRK_TIM12_IRQHandler(void){ //Interrupt Service-Routine
 	uint16_t status_register = TIM12->SR;
 	TIM12->SR = 0;
 	
-	//Prüfe für Zählerüberlauf
+	//Prï¿½fe fï¿½r Zï¿½hlerï¿½berlauf
 	if (status_register & 0x1){
 		freq_overflow_count++;
 	}
-	//Prüfe für Capture Event
+	//Prï¿½fe fï¿½r Capture Event
 	if (status_register & 0x2){
 		Periode = (TIM12->CCR1 + freq_overflow_count * 65536) - freq_last_capture_time;
 		
@@ -185,8 +185,8 @@ volatile uint32_t diff_flanke = 0; //Differenz von 1->2 Flanke
 void TIM12_init(){
 	//PIN Definieren
 	RCC->AHB1ENR |= (1<<1); //GPIOB einschalten
-	GPIOB->MODER |= 0x20000000; //Alternatefunktion aktivieren für PB14
-	GPIOB->AFR[1] |= 0x09000000; //AF Funktion 9 für Ch1
+	GPIOB->MODER |= 0x20000000; //Alternatefunktion aktivieren fï¿½r PB14
+	GPIOB->AFR[1] |= 0x09000000; //AF Funktion 9 fï¿½r Ch1
 	
 	RCC->APB1ENR |= (1<<6); //Timer 12 aktivieren
 	//Aus Unterricht
@@ -195,36 +195,36 @@ void TIM12_init(){
 	TIM12->ARR = 0xFFFF;
 	TIM12->CCMR1 |= 1;
 	TIM12->CCER |= 1;
-	NVIC_SetPriority(TIM8_BRK_TIM12_IRQn, 5); //Timer 12 auf Prio 5 (höher als Timer7)
+	NVIC_SetPriority(TIM8_BRK_TIM12_IRQn, 5); //Timer 12 auf Prio 5 (hï¿½her als Timer7)
 	NVIC_EnableIRQ(TIM8_BRK_TIM12_IRQn); //Interrupt einschalten
 	TIM12->CR1 |= 1;
 
 }
 
-volatile uint32_t ueberlauf = 0; //Überlauf-Counter
+volatile uint32_t ueberlauf = 0; //ï¿½berlauf-Counter
 void TIM8_BRK_TIM12_IRQHandler(void){
 	uint32_t status = TIM12->SR;
 	
-	if ( status & 0x01){ //Bei Überlauf
+	if ( status & 0x01){ //Bei ï¿½berlauf
 		TIM12->SR &= ~(1<<9); 
 		TIM12->SR &= ~(1);
-		ueberlauf++; //Überlauf erkannt und den Coutner erhöhen
+		ueberlauf++; //ï¿½berlauf erkannt und den Coutner erhï¿½hen
 	} else if (status & 0x02) { //Capture-Flag
 		flanke2 = flanke1;
 		flanke1 = TIM12->CCR1; //Flanke erkannt und setzen
-		diff_flanke = (65535 * ueberlauf) + flanke1 - flanke2; //Differenzen der Flanken unter einbezug des Überlaufs berechnen
-		ueberlauf = 0; //Überlaufzähler nach Differenzrechnung auf 0 setzen
+		diff_flanke = (65535 * ueberlauf) + flanke1 - flanke2; //Differenzen der Flanken unter einbezug des ï¿½berlaufs berechnen
+		ueberlauf = 0; //ï¿½berlaufzï¿½hler nach Differenzrechnung auf 0 setzen
 		
 	}
 }
 
-void TIM4_init(){ //Timer4 für PWM zum Display dimmen -> TIM4: Pin PD12-PD15
+void TIM4_init(){ //Timer4 fï¿½r PWM zum Display dimmen -> TIM4: Pin PD12-PD15
 	//PIN PD13 Konfig
 	//GPIOD wird in Main eingeschaltet - vor Blinky (hier dennoch zum sicher gehen)
 	RCC->AHB1ENR |= 1<<3;
 	GPIOD->MODER &= ~(1<<26);
 	GPIOD->MODER |= 2<<26; //Pin PD13 auf Output?
-	GPIOD->AFR[1] |= 2<<20; //AF Funktion 2 für TIM4_CH2
+	GPIOD->AFR[1] |= 2<<20; //AF Funktion 2 fï¿½r TIM4_CH2
 	GPIOD->AFR[1] &= ~(1<<20);
 	
 	
@@ -234,24 +234,24 @@ void TIM4_init(){ //Timer4 für PWM zum Display dimmen -> TIM4: Pin PD12-PD15
 
 	
 	TIM4->CR1 &= ~(3<<5);
-	TIM4->CR1 &= ~(1<<4); //Aufwärtszählen
+	TIM4->CR1 &= ~(1<<4); //Aufwï¿½rtszï¿½hlen
 	
 	
 	TIM4->SMCR = 0x0000; //Reset-Einstellung von SlaveModeControlRegister
 	TIM4->CR2 = 0x0000; //Reset-Einstellung
 	
-	TIM4->CCMR1 |= (6<<12); //für PWM-Verhalten
+	TIM4->CCMR1 |= (6<<12); //fï¿½r PWM-Verhalten
 	
 	TIM4->CCER |= ( (1<<4) /*| (0<<5) | (0<<7) */); //Compare-Modus ein & Ausgangspolarisations auf High-Pegel (wenn Low-Pegel: 1<<5)
 	
-	TIM4->CCR2 = 999; //Pulsweise in PWM (Hier kann man 0-100% der Pulsweise eingeben) - Je kleiner der Wert, desto kürzer ist On Phase -> länger off
+	TIM4->CCR2 = 999; //Pulsweise in PWM (Hier kann man 0-100% der Pulsweise eingeben) - Je kleiner der Wert, desto kï¿½rzer ist On Phase -> lï¿½nger off
 	
 	//Timer wird durch das interne Taktsignal CK_INZ gespeist, hier 84MHz
 	TIM4->PSC = 84*5-1; //Prescaler -> 200Hz
 	TIM4->ARR = 1000-1; //
 	
 	
-	TIM4->CR1 = 1; //CEN Bit & DIR aufwärtszählen
+	TIM4->CR1 = 1; //CEN Bit & DIR aufwï¿½rtszï¿½hlen
 }
 
 /***********************************************
@@ -271,7 +271,7 @@ int main (void) {
 /*	
 	//Blinky Aufgabe 1
 	while (1) {
-	if ( (GPIOA->IDR & 1) == 0){ 		//Checken ob USER-Taste gedrückt if ne, sonst ja.
+	if ( (GPIOA->IDR & 1) == 0){ 		//Checken ob USER-Taste gedrï¿½ckt if ne, sonst ja.
 			GPIOD->ODR &= ~(1<<12);
 		}	else {
 			GPIOD->ODR |= 1<<12;
@@ -287,7 +287,7 @@ int main (void) {
 	Timer7_init(); // Auf.4 Die beiden Init immer als erstes - vor erstem F-Aufruf
 	LCD_Init(); 
 	
-	LCD_ClearDisplay(0x0000); //Display weiß füllen
+	LCD_ClearDisplay(0x0000); //Display weiï¿½ fï¿½llen
 	
 	char time[20];
 		
@@ -301,7 +301,7 @@ int main (void) {
 	//Aufgabe 7 - Display dimmen mit PWM
 	TIM4_init();
 	
-	if (mainloop == 1){	//main soll nur alle 50ms ausgeführt werden (Aufgabe 4)
+	if (mainloop == 1){	//main soll nur alle 50ms ausgefï¿½hrt werden (Aufgabe 4)
 			
 	while(1){
   //lauflicht();
@@ -332,7 +332,7 @@ int main (void) {
 		sprintf(posFl, "Periode: %7d t", diff_flanke);
 		LCD_WriteString(20, 60, 0x0000, 0xFFFF, posFl);
 		
-		if (diff_flanke < 100){ //Um sprunghafte Wechsel der Messungen zu vermeiden und höhere Freq. messen zu können
+		if (diff_flanke < 100){ //Um sprunghafte Wechsel der Messungen zu vermeiden und hï¿½here Freq. messen zu kï¿½nnen
 			NVIC_EnableIRQ(TIM8_BRK_TIM12_IRQn);
 		}
 		/*****************************************************************************/
