@@ -16,37 +16,20 @@ void udelay(int delay)
 	}
 }
 
-void Timer7_init(){
-	NVIC_SetPriority(TIM7_IRQn, 10); //Timer 7 mit Interrupt-Priorität: 10
-	NVIC_EnableIRQ(TIM7_IRQn); //Interrupt für Timer7 einschalten 
-	
-	RCC->APB1ENR |= (1<<5); //Zeit für Timer7 einschalten
-		//Direkt im Timer 7
-		//TIM7->CR1 |= (1<<2); //Bit auf 1 setzen -> disable update
-		TIM7->DIER |= (1); //DMA einschalten
-		TIM7->PSC = 83; //Prescaler einstellen - hier durch (84-1) teilen
-		TIM7->ARR = 999; //Vergleichwert - hier 1000 Takte (da 1000-1)
-		TIM7->CR1 |= (1); //Counter einschalten	
+void Timer7_init(void){
+    RCC->APB1ENR |= 1 << 5;                 //peripheral Timer 7 an
+    TIM7->PSC = 19;                         //Prescaler einstellen               (83 für praktikum dann)    ( 84Mhz-1 )
+	TIM7->ARR = 999;                        //Vergleichwert hier 1000 Takte
+    TIM->DIER |= 1;                         //interrupt im peripheral anmachen
+    NVIC_SetPriority(TIM7_TRQn, 5);
+    NVIC_EnableTRQ(TIM7_IRQn);              //interrupt scharf schalten
+	TIM7->CR1 |= (1);                       //Counter einschalten	(zählt nach oben)
 }
 
-void TIM7_IRQHandler(void){ //Aus Vorlesung c: 
-	TIM7->SR=0; //Statusregister auf 0
-	ms++;
-	//Backlight an und aus
-	if ((GPIOA->IDR & 1) != 0){
-		curr_ms = ms;
-		GPIOD->ODR |= (1<<13);
-		TIM7->CCR2 = 1000;
-	}
-		
-	//BLINKY mit Timer
-	if (ms % 500 == 0) {  //alle 500ms
-		if (GPIOA->IDR & 1){ //User Taste gedrückt???
-			GPIOD->ODR ^= (1<<12); //XOR Bitweise mit 1  (0 -> 1, 1->0)
-		} else { //Sonst LED aus
-			GPIOD->ODR &= ~(1<<12);
-		}
-	}
+
+void TIM7_IRQHandler(void){
+    TIM7->SR = 0;           //Statusregister auf 0      (LÖSCHE ISR FLAG im Peripheral)
+    ms++;                   //zeit um einer millisekunde erhoehen
 }
 
 
