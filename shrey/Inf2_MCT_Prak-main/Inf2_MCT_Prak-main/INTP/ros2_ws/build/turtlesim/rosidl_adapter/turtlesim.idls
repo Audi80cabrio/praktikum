@@ -1,8 +1,0 @@
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:action/RotateAbsolute.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:msg/Color.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:msg/Pose.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:srv/Kill.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:srv/SetPen.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:srv/Spawn.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:srv/TeleportAbsolute.idl
-/home/shrey/workspace/Inf2_MCT_Prak/INTP/ros2_ws/build/turtlesim/rosidl_adapter/turtlesim:srv/TeleportRelative.idl
