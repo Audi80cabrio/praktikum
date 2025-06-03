@@ -1,20 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h> //Für Multithreading
+#include <pthread.h>
 #include <time.h>
 
-#define MAX 100000000 //Obergrenze für Startwerte der Collatz-Folge (also von 1 bis 100 Mio)
+#define MAX 100000000       //1 - 100.000.000
 
 typedef struct {
-    unsigned int start; //Untere Grenze des Bereichs, den ein Thread untersuchen soll (Startwert inklusive).
+    unsigned int start;
     unsigned int end;
-    unsigned int max_start; // Rückgabe: Startwert mit längster Folge
-    unsigned int max_count; // die Länge (Anzahl Schritte) der längsten gefundenen Collatz-Folge im Bereich.
+    unsigned int max_start; // rückgabe: startwert mit längster folge
+    unsigned int max_count; // länge der collatz folge
 } CollatzArgs;
 
 
-//Berechnet, wie viele Schritte nötig sind, um aus x über die Collatz-Regeln zur 1 zu kommen
-unsigned int collatz_length(unsigned int x) {
+unsigned int collatz_length(unsigned long x) {
     unsigned int count = 0;
     while (x > 1) {
         if (x % 2 == 0)
@@ -23,24 +22,22 @@ unsigned int collatz_length(unsigned int x) {
             x = 3 * x + 1;
         count++;
     }
-    return count; //Anzahl der Schritte
+    return count; //anzahl der schritte für collatz
 }
 
 
 //was der thread ausführt
-//Diese Funktion wird von einem Thread ausgeführt und sucht im
-// zugewiesenen Zahlenbereich nach dem Startwert mit der längsten Collatz-Folge
 void* collatz_worker(void* arg) {
     CollatzArgs* args = (CollatzArgs*) arg;
     args->max_count = 0;
     args->max_start = 0;
 
 
-    //Jeder dieser Werte wird als möglicher Startwert einer Collatz-Folge untersucht.
+    //collatz für 1 für 2 für 3 für 4 bis für 100.000.000
     for (unsigned int i = args->start; i <= args->end; i++) {
         unsigned int len = collatz_length(i);
 
-        //Vergleich & Speichern des Maximums
+        //vergleich und speichern des maximums
         if (len > args->max_count) {
             args->max_count = len;
             args->max_start = i;
@@ -51,7 +48,7 @@ void* collatz_worker(void* arg) {
 }
 
 
-//Berechnet die Differenz zwischen zwei Zeitpunkten in Nanosekunden
+//berechnet die differenz zwischen zwei zeitpunkten in nanosekunden
 long time_diff_ns(struct timespec start, struct timespec end) {
     return (end.tv_sec - start.tv_sec) * 1000000000L + (end.tv_nsec - start.tv_nsec);
 }
@@ -59,11 +56,11 @@ long time_diff_ns(struct timespec start, struct timespec end) {
 int main(int argc, char* argv[]) {
     int num_threads = (argc >= 2) ? atoi(argv[1]) : 4;
 
-    //Speicher für Threads und Argumente anlegen
+    //speicher für threads und argumente anlegen
     pthread_t* threads = malloc(num_threads * sizeof(pthread_t));
     CollatzArgs* args = malloc(num_threads * sizeof(CollatzArgs));
 
-    unsigned int chunk = MAX / num_threads; //Zerlegt den Gesamtbereich (1 bis MAX) in gleich große Stücke
+    unsigned int chunk = MAX / num_threads; //zerlegt den gesamtbereich (1 bis 100.000.000) in gleich große teile
 
     struct timespec start_time, end_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
