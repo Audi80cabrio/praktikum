@@ -5,7 +5,7 @@
 #include <stdatomic.h>
 #include <unistd.h>
 
-#define NUM_PRODUCERS 50
+#define NUM_PRODUCERS 20
 #define NUM_CONSUMERS 30
 #define ITEMS_PER_PRODUCER 10000
 #define MAX_PRODUCED (NUM_PRODUCERS * ITEMS_PER_PRODUCER)
@@ -61,32 +61,32 @@ void* producer(void* arg) {
     for (int i = 0; i < ITEMS_PER_PRODUCER; i++) {
         int num = rand_r(&seed) % 1000;
 
-        sem_wait(&sem_slots);
-        sem_wait(&sem_mutex);
+        sem_wait(&sem_slots);       //lock
+        sem_wait(&sem_mutex);       //lock
 
         enqueue(num);
         list_length++;
-        if (list_length > MAX_LIST_LENGTH) {
+        int local_list_length = list_length;
+        sem_post(&sem_mutex);       //unlock
+        sem_post(&sem_items);       //unlock       
+        if (local_list_length > MAX_LIST_LENGTH) {
             fprintf(stderr, "Fehler: Listenlänge überschreitet %d\n", MAX_LIST_LENGTH);
         }
 
         atomic_fetch_add(&gl_prod, num);
         atomic_fetch_add(&produced_count, 1);
-
-        sem_post(&sem_mutex);
-        sem_post(&sem_items);
     }
 
     // Nur ein Producer schickt Endemarker
     static atomic_int done = 0;
     if (atomic_fetch_add(&done, 1) == NUM_PRODUCERS - 1) {
         for (int i = 0; i < NUM_CONSUMERS; i++) {
-            sem_wait(&sem_slots);
-            sem_wait(&sem_mutex);
-            enqueue(-1);
+            sem_wait(&sem_slots);       //lock
+            sem_wait(&sem_mutex);       //lock
+            enqueue(-1);                //endmarker
             list_length++;
-            sem_post(&sem_mutex);
-            sem_post(&sem_items);
+            sem_post(&sem_mutex);       //unlock
+            sem_post(&sem_items);       //unlock
         }
     }
 

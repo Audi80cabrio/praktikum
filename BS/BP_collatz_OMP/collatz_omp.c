@@ -62,4 +62,3 @@ int main() {
     printf("Laufzeit: %.2f Sekunden\n", end_time - start_time);
     return 0;
 }
-//fazit: omp ist sehr schön übersichtlich...
