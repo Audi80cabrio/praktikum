@@ -70,3 +70,4 @@ int main() {
 
     return 0;
 }
+//g++ -std=c++17 -O3 -pthread -o collatz_async collatz_async.cpp
